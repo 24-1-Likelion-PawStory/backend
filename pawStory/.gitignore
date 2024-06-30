@@ -1,0 +1,6 @@
+vir
+db.sqlite3
+migrations
+.DS_Store
+__pycache__
+secrets.json
