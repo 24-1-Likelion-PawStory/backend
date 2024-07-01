@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, email, user_id, name, pet_name, pet_type, user_bir, password=None, **extra_fields): # 일반 계정 생성 메서드
+    def create_user(self, email, user_id, name, pet_name, pet_type, user_bir, password=None,pet_photo=None, **extra_fields): # 일반 계정 생성 메서드
         if not email:
             raise ValueError('The Email field must be set')
         if not user_id:
@@ -25,6 +25,7 @@ class CustomUserManager(BaseUserManager):
             pet_name=pet_name,
             pet_type=pet_type,
             user_bir=user_bir,
+            pet_photo=pet_photo,
             **extra_fields
         )
         user.set_password(password)
@@ -43,6 +44,7 @@ class CustomUserManager(BaseUserManager):
             pet_type='DOG',       # 기본값 설정
             user_bir='2000-01-01',# 기본값 설정
             password=password,
+            pet_photo='default_pet_photo.jpg',
             **extra_fields
         )
 
@@ -62,6 +64,7 @@ class Member(AbstractBaseUser, PermissionsMixin):
         choices=PetType.choices,
         default=PetType.DOG
     )
+    pet_photo = models.ImageField(upload_to='pet_photos/', null=True, blank=True)
     user_bir = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
