@@ -14,7 +14,6 @@ secret_file = BASE_DIR / 'secrets.json'
 BASE_DIR = Path(__file__).resolve().parent.parent # 프로젝트 디렉토리의 경로를 설정합니다.
 
 MEDIA_URL = '/media/'  # 미디어 파일을 제공할 URL을 설정합니다.
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # 미디어 파일이 저장될 경로를 설정합니다.
 
 
 with open(secret_file) as file:
