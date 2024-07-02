@@ -21,6 +21,9 @@ def signup_view(request):
             user = serializer.save()  # 사용자 생성
             login(request, user)  # 사용자 로그인
             print("User created and logged in:", user)  # 로그 추가
+            
+
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)  # 201 Created 상태코드 반환
         print("Validation errors:", serializer.errors)  # 로그 추가
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  # 400 Bad Request 상태코드 반환
@@ -28,7 +31,7 @@ def signup_view(request):
 # 반려동물 정보를 처리하는 API 뷰
 @csrf_exempt  # CSRF 검증 비활성화
 @api_view(['POST'])  # POST 요청만 허용
-@permission_classes([IsAuthenticated])  #반려동물 정보 입력은 JWT인증된 사용자만 가능
+# @permission_classes([IsAuthenticated])  #반려동물 정보 입력은 JWT인증된 사용자만 가능
 def pet_info_view(request):
     print("Received pet info data:", request.data)  # 로그 추가
     if request.method == 'POST':
