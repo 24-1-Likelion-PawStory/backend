@@ -1,4 +1,7 @@
+# Django REST framework 설정으로, API의 권한 및 인증 방식을 설정합니다.
+from datetime import timedelta
 from pathlib import Path
+from decouple import config
 import os  # 추가
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -81,10 +84,9 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',  # JWT를 통한 인증방식 사용
     ),
 }
-# Django REST framework 설정으로, API의 권한 및 인증 방식을 설정합니다.
-from datetime import timedelta
+
 SIMPLE_JWT = {
-    'SIGNING_KEY': 'hellolikelionhellolikelion', 
+    'SIGNING_KEY': config('SIGNING_KEY'), 
 		# JWT에서 가장 중요한 인증키입니다! 
 		# 이 키가 알려지게 되면 JWT의 인증체계가 다 털릴 수 있으니 노출되지 않게 조심해야합니다!
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),

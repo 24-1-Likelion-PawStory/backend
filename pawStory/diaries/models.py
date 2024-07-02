@@ -1,5 +1,6 @@
 from django.db import models
-from pawStory.users.models import Member
+from users.models import Member
+from django.db.models import UniqueConstraint
 
 # Create your models here.
 class Diary(models.Model):

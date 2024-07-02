@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import Diary, DiaryLike, DiaryComment
-from pawStory.users.models import Member
+from .models import *
+from users.models import Member
 
 class MemberDiarySerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,8 +1,8 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .models import Diary, DiaryLike, DiaryComment, Follow
-from .serializers import DiarySerializer, DiaryListSerializer, FollowSerializer, DiaryCommentSerializer
+from .models import *
+from .serializers import *
 from django.shortcuts import get_object_or_404
 
 def api_response(data, message, status_code):
