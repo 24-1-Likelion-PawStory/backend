@@ -1,5 +1,9 @@
+# users/urls.py
 from django.urls import path
+from .views import *
 
 urlpatterns = [
-    # 지금은 비워둡니다.
+    path('signup', signup_view, name='signup'),
+    path('login', login_view, name='login'),
+    path('pet_info', pet_info_view, name='pet_info'),
 ]
