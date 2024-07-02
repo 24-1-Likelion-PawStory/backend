@@ -1,4 +1,5 @@
 from pathlib import Path
+import os  # 추가
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -6,6 +7,12 @@ from django.core.exceptions import ImproperlyConfigured
 import json
 
 secret_file = BASE_DIR / 'secrets.json'
+
+BASE_DIR = Path(__file__).resolve().parent.parent # 프로젝트 디렉토리의 경로를 설정합니다.
+
+MEDIA_URL = '/media/'  # 미디어 파일을 제공할 URL을 설정합니다.
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # 미디어 파일이 저장될 경로를 설정합니다.
+
 
 with open(secret_file) as file:
     secrets = json.loads(file.read())
@@ -36,11 +43,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #external apps
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'corsheaders',
+
 ]
 
 AUTH_USER_MODEL = 'users.Member' # 사용자 모델을 커스텀 유저 모델로 변경
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -53,6 +68,34 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+ 
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',  # 인증된 요청인지 확인
+        #'rest_framework.permissions.AllowAny',  # 누구나 접근 가능
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',  # JWT를 통한 인증방식 사용
+    ),
+}
+# Django REST framework 설정으로, API의 권한 및 인증 방식을 설정합니다.
+from datetime import timedelta
+SIMPLE_JWT = {
+    'SIGNING_KEY': 'hellolikelionhellolikelion', 
+		# JWT에서 가장 중요한 인증키입니다! 
+		# 이 키가 알려지게 되면 JWT의 인증체계가 다 털릴 수 있으니 노출되지 않게 조심해야합니다!
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+		# access token의 유효시간을 설정합니다.
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+		# refresh token의 유효시간을 설정합니다.
+    'ROTATE_REFRESH_TOKENS': False,
+		# True로 설정하면 리프레시 토큰이 사용될 때마다 새로운 리프레시 토큰이 발급됩니다.
+    'BLACKLIST_AFTER_ROTATION': True,
+		# 리프레시 토큰 회전 후, 이전의 리프레시 토큰이 블랙리스트에 추가될지 여부를 나타내는 부울 값입니다. 
+		# True로 설정하면 리프레시 토큰이 회전되면서, 이전의 리프레시 토큰은 블랙리스트에 추가되어 더 이상 사용할 수 없게 됩니다.
+}
+# JWT 설정으로, JSON Web Token의 특정 속성을 설정합니다.
 ROOT_URLCONF = 'pawStory.urls'
 
 TEMPLATES = [
@@ -106,3 +149,4 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
