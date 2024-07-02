@@ -4,3 +4,4 @@ migrations
 .DS_Store
 __pycache__
 secrets.json
+venv
