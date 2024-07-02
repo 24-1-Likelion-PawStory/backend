@@ -17,8 +17,7 @@ class DiaryListView(generics.ListAPIView):
     serializer_class = DiaryListSerializer
 
     def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
+        response = super().list(request, *args, **kwargs)
         return api_response(serializer.data, "일기 목록 조회 성공", status.HTTP_200_OK)
 
 class DiaryDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -26,52 +25,50 @@ class DiaryDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = DiarySerializer
     permission_classes = [IsAuthenticated]
 
-    def retrieve(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        return api_response(serializer.data, "일기 조회 성공", status.HTTP_200_OK)
+    def get(self, request, *args, **kwargs):
+        response = super().retrieve(request, *args, **kwargs)
+        return api_response(data=response.data, message="일기 조회 성공", status_code=status.HTTP_200_OK)
 
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        return api_response(serializer.data, "일기 수정 성공", status.HTTP_200_OK)
+    def put(self, request, *args, **kwargs):
+        response = super().update(request, partial=partial, *args, **kwargs)
+        return api_response(data=response.data, message="일기 수정 성공", status_code=status.HTTP_200_OK)
 
-    def destroy(self, request, *args, **kwargs):
+    def patch(self, request, *args, **kwargs):
+        response = super().partial_update(request, partial=partial, *args, **kwargs)
+        return api_response(data=response.data, message="일기 부분 수정 성공", status_code=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
         instance = self.get_object()
         self.perform_destroy(instance)
-        return api_response(None, "일기 삭제 성공", status.HTTP_204_NO_CONTENT)
+        return api_response(None, "일기 삭제 성공", status_code=status.HTTP_204_NO_CONTENT)
+
+    def perform_destroy(self, instance):
+        # 일기와 관련된 좋아요와 댓글 모두 삭제
+        DiaryLike.objects.filter(diary=instance).delete()
+        DiaryComment.objects.filter(diary=instance).delete()
+        instance.delete()
 
 class DiaryCreateView(generics.CreateAPIView):
     queryset = Diary.objects.all()
     serializer_class = DiarySerializer
     permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
-        serializer.save(member=self.request.user)
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        return api_response(serializer.data, "일기 작성 성공", status.HTTP_201_CREATED)
+    def post(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        return api_response(data=response.data, message="일기 작성 성공", status_code=status.HTTP_201_CREATED)
 
 class DiaryLikeCreateView(generics.CreateAPIView):
     queryset = DiaryLike.objects.all()
     serializer_class = DiaryLikeSerializer
     permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
+    def post(self, request, *args, **kwargs):
         diary = get_object_or_404(Diary, id=self.kwargs['id'])
-        serializer.save(member=self.request.user, diary=diary)
-
-    def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        return api_response(serializer.data, "좋아요 성공", status.HTTP_201_CREATED)
+        serializer.save(member=self.request.user, diary=diary)
+        response = super().create(request, *args, **kwargs)
+        return api_response(data=response.data, message="좋아요 성공", status_code=status.HTTP_201_CREATED)
 
 class DiaryLikeDeleteView(generics.DestroyAPIView):
     queryset = DiaryLike.objects.all()
@@ -82,9 +79,8 @@ class DiaryLikeDeleteView(generics.DestroyAPIView):
         return get_object_or_404(DiaryLike, member=self.request.user, diary__id=self.kwargs['id'])
 
     def delete(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
-        return api_response(None, "좋아요 취소 성공", status.HTTP_204_NO_CONTENT)
+        response = super().delete(request, *args, **kwargs)
+        return api_response(None, "좋아요 취소 성공", status_code=status.HTTP_204_NO_CONTENT)
 
 class DiaryCommentCreateView(generics.CreateAPIView):
     queryset = DiaryComment.objects.all()
@@ -121,9 +117,8 @@ class DiaryCommentDeleteView(generics.DestroyAPIView):
         return get_object_or_404(DiaryComment, id=self.kwargs['comment_id'], member=self.request.user)
 
     def delete(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
-        return api_response(None, "댓글 삭제 성공", status.HTTP_204_NO_CONTENT)
+        response = super().delete(request, *args, **kwargs)
+        return api_response(None, "댓글 삭제 성공", status_code=status.HTTP_204_NO_CONTENT)
 
 class FollowCreateView(generics.CreateAPIView):
     queryset = Follow.objects.all()
@@ -151,6 +146,5 @@ class FollowDeleteView(generics.DestroyAPIView):
         return get_object_or_404(Follow, follower=self.request.user, following__id=following_id)
 
     def delete(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
-        return api_response(None, "언팔로우 성공", status.HTTP_204_NO_CONTENT)
+        response = super().delete(request, *args, **kwargs)
+        return api_response(None, "언팔로우 성공", status_code=status.HTTP_204_NO_CONTENT)
