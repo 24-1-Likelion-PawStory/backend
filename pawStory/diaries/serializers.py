@@ -24,21 +24,29 @@ class DiaryLikeSerializer(serializers.ModelSerializer):
 class DiaryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Diary
-        fields = ['photo', 'content', 'is_public']  # member 필드 제외
+        fields = ['photo', 'content', 'is_public']
 
     def create(self, validated_data):
         member = self.context['request'].user
-        return Diary.objects.create(member=member, **validated_data)
+        diary = Diary.objects.create(member=member, **validated_data)
+        return diary
 
 class DiarySerializer(serializers.ModelSerializer):
     member = MemberDiarySerializer(read_only=True)
+    likes = DiaryLikeSerializer(many=True, read_only=True, source='diary_likes')
     comments = DiaryCommentSerializer(many=True, read_only=True, source='diary_comments')
-    like_count = serializers.IntegerField(source='diary_likes.count', read_only=True)
-    comment_count = serializers.IntegerField(source='diary_comments.count', read_only=True)
+    like_count = serializers.SerializerMethodField()
+    comment_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Diary
-        fields = ['id', 'photo', 'content', 'created_at', 'is_public', 'member', 'comments', 'like_count', 'comment_count']
+        fields = ['id', 'photo', 'content', 'created_at', 'is_public', 'member', 'likes', 'comments', 'like_count', 'comment_count']
+
+    def get_like_count(self, obj):
+        return obj.diary_likes.count()
+
+    def get_comment_count(self, obj):
+        return obj.diary_comments.count()
 
 class DiaryListSerializer(serializers.ModelSerializer):
     class Meta:

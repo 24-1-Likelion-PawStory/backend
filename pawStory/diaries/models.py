@@ -30,18 +30,13 @@ class DiaryLike(models.Model):
     member = models.ForeignKey(Member, verbose_name="좋아요한 사람", on_delete=models.CASCADE, related_name="diary_likes") # 회원정보 키
     diary = models.ForeignKey(Diary, verbose_name="좋아요한 일기", on_delete=models.CASCADE, related_name="diary_likes") # 일기 키
 
+    class Meta:
+        constraints = [
+                UniqueConstraint(fields=['member', 'diary'], name='unique_like')
+            ]
+
     def __str__(self):
-        return self.content
-
-    # def clean(self): # clean 메서드를 통해 유효성 검사
-    #     # 일기 작성자가 스스로 좋아요를 누르지 않도록 검사
-    #     if self.member_id == self.diary_id.member_id:
-    #         raise ValidationError("작성자는 자신의 일기에 좋아요를 누를 수 없습니다.")
-
-    # def save(self, *args, **kwargs):
-    #     # 저장하기 전에 clean 메서드 호출
-    #     self.clean()
-    #     super(DiaryLike, self).save(*args, **kwargs)
+        return f"{self.member.user_id} likes {self.diary.content[:20]}"
 
 class DiaryComment(models.Model):
     id = models.AutoField(primary_key=True) # 댓글 키
@@ -52,6 +47,12 @@ class DiaryComment(models.Model):
 
     def __str__(self):
         return self.content
+
+    def save(self, *args, **kwargs):
+        if self._state.adding:
+            self.diary.comment_count = F('comment_count') + 1
+            self.diary.save(update_fields=['comment_count'])
+        super(DiaryComment, self).save(*args, **kwargs)
 
 class Follow(models.Model):
     id = models.AutoField(primary_key=True) # 팔로우 키
