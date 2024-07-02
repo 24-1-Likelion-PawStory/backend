@@ -1,18 +1,18 @@
 from rest_framework import serializers
-from .models import *
-from pawStory.members.models import Member
+from .models import Diary, DiaryLike, DiaryComment
+from pawStory.users.models import Member
 
 class MemberDiarySerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
-        fields = ['id', 'user_id', 'profile_image']
+        fields = ['id', 'user_id', 'profile_image']  # 필요 시 추가 필드
 
 class DiaryCommentSerializer(serializers.ModelSerializer):
     member = MemberDiarySerializer(read_only=True)
     
     class Meta:
         model = DiaryComment
-        fields = ['id', 'content', 'member']
+        fields = ['id', 'content', 'created_at', 'member']
 
 class DiaryLikeSerializer(serializers.ModelSerializer):
     member = MemberDiarySerializer(read_only=True)
