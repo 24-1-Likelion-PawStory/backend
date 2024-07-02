@@ -3,16 +3,25 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny, IsAuthenticated  # *수정*
-from rest_framework_simplejwt.tokens import RefreshToken  # *수정*
+from rest_framework.permissions import AllowAny, IsAuthenticated  
+from rest_framework_simplejwt.tokens import RefreshToken  
 from .serializers import SignUpSerializer, PetInfoSerializer, LoginSerializer
 
 User = get_user_model()  # 커스텀 유저 모델 가져오기
 
+# 임시 토큰 생성 함수
+def create_temp_access_token(user):
+    from rest_framework_simplejwt.tokens import AccessToken
+    from datetime import timedelta
+    
+    access = AccessToken.for_user(user)
+    access.set_exp(lifetime=timedelta(minutes=5))  # 임시 토큰의 만료 시간을 5분으로 설정
+    return str(access)
+
 # 회원가입을 처리하는 API 뷰
-@csrf_exempt  #CSRF 검증 비활성화
+@csrf_exempt  # CSRF 검증 비활성화
 @api_view(['POST'])  # POST 요청만 허용
-@permission_classes([AllowAny])  #회원가입은 누구나 가능
+@permission_classes([AllowAny])  # 회원가입은 누구나 가능
 def signup_view(request):
     print("Received data:", request.data)  # 로그 추가
     if request.method == 'POST':  # POST 요청일 때
@@ -21,7 +30,15 @@ def signup_view(request):
             user = serializer.save()  # 사용자 생성
             login(request, user)  # 사용자 로그인
             print("User created and logged in:", user)  # 로그 추가
-            return Response(serializer.data, status=status.HTTP_201_CREATED)  # 201 Created 상태코드 반환
+
+            # 임시 토큰 생성 펫 정보 입력 할 때 유효한 토큰 발급
+            temp_access_token = create_temp_access_token(user)
+            # 응답시에 유저 정보와 임시 토큰을 반환
+            return Response({
+                'user': serializer.data,
+                'temp_access_token': temp_access_token
+            }, status=status.HTTP_201_CREATED)  # 201 Created 상태코드 반환
+
         print("Validation errors:", serializer.errors)  # 로그 추가
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  # 400 Bad Request 상태코드 반환
 
@@ -59,12 +76,21 @@ def login_view(request):
             user = authenticate(request, username=user_id, password=password)
             if user is not None: # 사용자 인증 성공
                 login(request, user) # 사용자 로그인
-                refresh = RefreshToken.for_user(user)  # JWT 토큰 생성
+
+                # 정식 JWT 토큰 생성
+                refresh = RefreshToken.for_user(user)  # RefreshToken 객체 생성
+                access_token = str(refresh.access_token)  # 액세스 토큰 추출
+                refresh_token = str(refresh)  # 리프레시 토큰 추출
+
+                # 응답에 액세스 토큰과 리프레시 토큰을 포함하여 반환
                 return Response({
-                    'refresh_token': str(refresh),
-                    'access_token': str(refresh.access_token),
+                    'refresh_token': refresh_token,
+                    'access_token': access_token,
                 }, status=status.HTTP_200_OK)
+            
+
             print("Invalid credentials for user_id:", user_id)
             return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+        
         print("Login validation errors:", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
