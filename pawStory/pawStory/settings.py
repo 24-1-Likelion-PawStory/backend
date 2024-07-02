@@ -19,6 +19,8 @@ def get_secret(setting,secrets_dict = secrets):
 
 SECRET_KEY = get_secret('SECRET_KEY') 
 # 위의 과정들을 통해 json 파일의 secrets.json 파일을 읽어 SECRET_KEY 값을 할당해줍니다
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 DEBUG = True
 
