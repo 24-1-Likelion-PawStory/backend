@@ -4,3 +4,7 @@ migrations
 .DS_Store
 __pycache__
 secrets.json
+venv
+newenv
+db_backup.sqlite3
+media

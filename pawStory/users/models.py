@@ -1,5 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.utils import timezone
+from django.conf import settings
+import os
+
+def user_directory_path(instance, filename):
+
+    return 'user_{0}/{1}'.format(instance.user_id, filename)
 
 class CustomUserManager(BaseUserManager): 
     def create_user(self, email, user_id, name, user_bir, password=None, **extra_fields): # 일반 계정 생성 메서드
