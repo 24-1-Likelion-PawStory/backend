@@ -16,3 +16,5 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):  # 제네릭 뷰 �
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
+
+    #변경사항뜨게하는용 ㅜ주석
