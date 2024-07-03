@@ -5,6 +5,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated  
 from rest_framework_simplejwt.tokens import RefreshToken  
 from .serializers import SignUpSerializer, PetInfoSerializer, LoginSerializer
+from django.views.decorators.csrf import csrf_exempt
+
 
 User = get_user_model()
 
