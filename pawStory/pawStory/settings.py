@@ -1,33 +1,29 @@
-# Django REST framework 설정으로, API의 권한 및 인증 방식을 설정합니다.
-from datetime import timedelta
+import os
+import json
 from pathlib import Path
-from decouple import config
-import os  # 추가
+from datetime import timedelta
+from django.core.exceptions import ImproperlyConfigured
 
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-from django.core.exceptions import ImproperlyConfigured
-import json
-
+# secrets.json 파일에서 시크릿 키 값 로드하기
 secret_file = BASE_DIR / 'secrets.json'
 
-BASE_DIR = Path(__file__).resolve().parent.parent # 프로젝트 디렉토리의 경로를 설정합니다.
+with open(secret_file) as f:
+    secrets = json.loads(f.read())
 
-MEDIA_URL = '/media/'  # 미디어 파일을 제공할 URL을 설정합니다.
-
-
-with open(secret_file) as file:
-    secrets = json.loads(file.read())
-
-def get_secret(setting,secrets_dict = secrets):
+def get_secret(setting, secrets=secrets):
     try:
-        return secrets_dict[setting]
+        return secrets[setting]
     except KeyError:
-        error_msg = f'Set the {setting} environment variable'
-        raise ImproperlyConfigured(error_msg)
+        raise ImproperlyConfigured(f'Set the {setting} environment variable')
 
-SECRET_KEY = get_secret('SECRET_KEY') 
-# 위의 과정들을 통해 json 파일의 secrets.json 파일을 읽어 SECRET_KEY 값을 할당해줍니다
+# 시크릿키와 서명키 가져오기
+SECRET_KEY = get_secret('SECRET_KEY')
+SIGNING_KEY = get_secret('SIGNING_KEY')
+
+# 미디어 파일을 저장할 디렉터리 설정
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -85,7 +81,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'SIGNING_KEY': config('SIGNING_KEY'), 
+    'SIGNING_KEY': SIGNING_KEY,
 		# JWT에서 가장 중요한 인증키입니다! 
 		# 이 키가 알려지게 되면 JWT의 인증체계가 다 털릴 수 있으니 노출되지 않게 조심해야합니다!
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),

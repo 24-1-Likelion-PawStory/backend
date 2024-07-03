@@ -1,5 +1,6 @@
+# community/urls.py
 from django.urls import path
-from . import views
+from .views import *
 
 urlpatterns = [
     path('posts/', PostListCreateView.as_view(), name='post-list-create'),
