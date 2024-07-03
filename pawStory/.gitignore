@@ -8,3 +8,4 @@ venv
 newenv
 db_backup.sqlite3
 media
+venv/
