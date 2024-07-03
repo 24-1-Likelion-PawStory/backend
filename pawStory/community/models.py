@@ -1,3 +1,4 @@
+
 # community/models.py
 
 from django.db import models
@@ -55,3 +56,4 @@ class PostTag(models.Model):
 
     def __str__(self):
         return f'{self.post}에 달린 {self.tag}'  # 게시글에 달린 태그를 문자열로 반환
+
