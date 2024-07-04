@@ -6,6 +6,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken  
 from .serializers import SignUpSerializer, PetInfoSerializer, LoginSerializer
 from django.views.decorators.csrf import csrf_exempt
+from drf_yasg.utils import swagger_auto_schema
 
 
 User = get_user_model()
@@ -21,6 +22,17 @@ def create_temp_access_token(user):
 
 # 회원가입을 처리하는 API 뷰
 @csrf_exempt  # CSRF 검증 비활성화
+@swagger_auto_schema(
+    method='post',
+    operation_summary="회원가입",
+    operation_description="회원가입을 처리합니다. 이메일, 사용자 ID, 이름, 생일, 비밀번호를 입력받습니다.",
+    request_body=SignUpSerializer,
+    responses={
+        201: '회원가입 성공',
+        400: '잘못된 요청',
+        500: '서버 오류'
+    }
+)
 @api_view(['POST'])  # POST 요청만 허용
 @permission_classes([AllowAny])  # 회원가입은 누구나 가능
 def signup_view(request):
@@ -45,6 +57,17 @@ def signup_view(request):
 
 
 # 반려동물 정보 API 뷰
+@swagger_auto_schema(
+    method='post',
+    operation_summary="반려동물 정보 입력",
+    operation_description="사용자의 반려동물 정보를 입력합니다.",
+    request_body=PetInfoSerializer,
+    responses={
+        200: '반려동물 정보 입력 성공',
+        400: '잘못된 요청',
+        500: '서버 오류'
+    }
+)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def pet_info_view(request):
@@ -61,6 +84,18 @@ def pet_info_view(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # 로그인 API 뷰
+@swagger_auto_schema(
+    method='post',
+    operation_summary="로그인",
+    operation_description="사용자 로그인 처리합니다. 사용자 ID와 비밀번호를 입력받습니다.",
+    request_body=LoginSerializer,
+    responses={
+        200: '로그인 성공',
+        400: '잘못된 요청',
+        401: '인증 실패',
+        500: '서버 오류'
+    }
+)
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_view(request):
