@@ -29,7 +29,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['3.39.150.64']
 
 INSTALLED_APPS = [
     #my apps
