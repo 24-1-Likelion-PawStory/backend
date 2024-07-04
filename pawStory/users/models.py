@@ -9,7 +9,7 @@ def user_directory_path(instance, filename):
     return 'user_{0}/{1}'.format(instance.user_id, filename)
 
 class CustomUserManager(BaseUserManager): 
-    def create_user(self, email, user_id, name, user_bir, password=None, **extra_fields): # 일반 계정 생성 메서드
+    def create_user(self, email, user_id, name, user_bir,phone, password=None, **extra_fields): # 일반 계정 생성 메서드
         if not email:
             raise ValueError('이메일은 반드시 입력해야합니다.')
         if not user_id:
@@ -18,6 +18,8 @@ class CustomUserManager(BaseUserManager):
             raise ValueError('이름은 반드시 입력해야 합니다.')
         if not user_bir:
             raise ValueError('생일은 반드시 입력해야 합니다.')
+        if not phone:
+            raise ValueError('전화번호는 반드시 입력해야 합니다.')
         if not password:
             raise ValueError('패스워드는 반드시 입력해야합니다.')
         email = self.normalize_email(email)
@@ -26,6 +28,7 @@ class CustomUserManager(BaseUserManager):
             user_id=user_id,
             name=name,
             user_bir=user_bir,
+            phone=phone,
             pet_name='Default Pet Name', # 기본값 설정을 통해 회원가입만
             pet_type='DOG', # 기본값 설정 회원가입만처리
             **extra_fields
@@ -34,7 +37,7 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, user_id, name, password=None, **extra_fields): # 슈퍼계정 생성 메서드
+    def create_superuser(self, email, user_id, name, phone,password=None, **extra_fields): # 슈퍼계정 생성 메서드
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_staff', True)
 
@@ -43,6 +46,7 @@ class CustomUserManager(BaseUserManager):
             user_id=user_id,
             name=name,
             user_bir='2000-01-01', # 기본값 설정
+            phone='010-0000-0000', # 기본값 설정
             password=password,
             **extra_fields
         )
@@ -57,6 +61,7 @@ class Member(AbstractBaseUser, PermissionsMixin): # 사용자 모델 정의
     email = models.EmailField(unique=True) 
     user_id = models.CharField(max_length=20, unique=True)
     name = models.CharField(max_length=50)
+    phone = models.CharField(max_length=15, unique=True)
     pet_name = models.CharField(max_length=50, null=True, blank=True)
     pet_type = models.CharField(
         max_length=4,
