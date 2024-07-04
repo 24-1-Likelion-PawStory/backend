@@ -17,7 +17,7 @@ class Tag(models.Model):
 
 # 게시글 모델
 class Post(models.Model):
-    user = models.ForeignKey(Member, on_delete=models.CASCADE,null=False,lank=False)  # Member 모델과 1:N 관계 설정
+    user = models.ForeignKey(Member, on_delete=models.CASCADE)  # Member 모델과 1:N 관계 설정
     title = models.CharField(max_length=50)  # 제목
     content = models.TextField()  # 내용
     created_at = models.DateTimeField(auto_now_add=True)
