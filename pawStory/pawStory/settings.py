@@ -14,7 +14,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),  # 프로젝트 루트의 static 디렉토리
 ]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 with open(secret_file) as f:
     secrets = json.loads(f.read())
