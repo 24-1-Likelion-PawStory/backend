@@ -3,7 +3,6 @@ import json
 from pathlib import Path
 from datetime import timedelta
 from django.core.exceptions import ImproperlyConfigured
-from . import mysettings # mysettings.py 파일을 import 합니다.
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
