@@ -11,6 +11,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 secret_file = BASE_DIR / 'secrets.json'
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),  # 프로젝트 루트의 static 디렉토리
+]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 with open(secret_file) as f:
