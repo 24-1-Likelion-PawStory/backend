@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'community',
     'diaries',
     'users',
+    'accounts',
     #basic apps
     'django.contrib.admin',
     'django.contrib.auth',

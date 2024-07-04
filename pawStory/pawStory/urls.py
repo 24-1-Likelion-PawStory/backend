@@ -25,8 +25,10 @@ urlpatterns = [
     path('community/', include('community.urls')),
     path('diaries/', include('diaries.urls')),
     path('users/', include('users.urls')),
+    path('accounts/', include('accounts.urls')),
     # 스웨거
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # 미디어 파일을 제공할 수 있도록 URL 패턴 추가
+
