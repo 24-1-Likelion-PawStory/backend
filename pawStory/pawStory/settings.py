@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 from datetime import timedelta
 from django.core.exceptions import ImproperlyConfigured
+from . import mysettings # mysettings.py 파일을 import 합니다.
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -155,12 +156,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'pawStory.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+DATABASES = mysettings.DATABASES # mysettings.py에서 데이터베이스 설정을 가져옵니다.
 
 AUTH_PASSWORD_VALIDATORS = [
     {
