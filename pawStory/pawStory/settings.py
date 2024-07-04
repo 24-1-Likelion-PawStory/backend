@@ -37,6 +37,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [ '3.39.150.64', 
     'pawstory.p-e.kr',
+    '127.0.0.1',
 ]
 
 INSTALLED_APPS = [
@@ -65,7 +66,8 @@ AUTH_USER_MODEL = 'users.Member' # 사용자 모델을 커스텀 유저 모델�
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
