@@ -1,6 +1,7 @@
 from django.db import models
 from users.models import Member
 from django.db.models import UniqueConstraint
+from django.db.models import F
 
 # Create your models here.
 class Diary(models.Model):
@@ -20,6 +21,7 @@ class Diary(models.Model):
     created_at = models.DateTimeField(auto_now_add=True) # 생성일자
     is_public = models.CharField(max_length=10, choices=VISIBILITY_CHOICES, default=PUBLIC) # 공개여부
     like_count = models.IntegerField(default=0) # 좋아요 수
+    comment_count = models.IntegerField(default=0) # 댓글 수
     member = models.ForeignKey(Member, verbose_name="일기 작성자", on_delete=models.CASCADE, related_name="diary") # 회원정보 키
 
     def __str__(self):
@@ -65,4 +67,5 @@ class Follow(models.Model):
         ]
 
     def __str__(self):
-        return self.content
+        return f"{self.follower.user_id} follows {self.following.user_id}"
+
