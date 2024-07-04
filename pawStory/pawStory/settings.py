@@ -31,7 +31,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['3.39.150.64', 
+ALLOWED_HOSTS = [ '3.39.150.64', 
     'pawstory.p-e.kr'
 ]
 
@@ -71,14 +71,14 @@ MIDDLEWARE = [
     # 이 미들웨어는 주석 또는 삭제 처리 해주시면 됩니다!
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
  CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://127.0.0.1:8000",
     "http://3.39.150.64",
-    "https://pawstory.p-e.kr/"
+    "https://pawstory.p-e.kr"
  ]
 
 REST_FRAMEWORK = {
