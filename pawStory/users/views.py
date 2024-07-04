@@ -9,7 +9,6 @@ from django.views.decorators.csrf import csrf_exempt
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-
 User = get_user_model()
 
 # 임시 토큰 생성 함수
@@ -26,11 +25,12 @@ def create_temp_access_token(user):
 @swagger_auto_schema(
     method='post',
     operation_summary="회원가입",
-    operation_description="새로운 사용자를 등록합니다.",
+    operation_description="회원가입을 처리합니다. 이메일, 사용자 ID, 이름, 생일, 비밀번호를 입력받습니다.",
     request_body=SignUpSerializer,
     responses={
-        201: openapi.Response('Created', SignUpSerializer),
-        400: '잘못된 요청입니다.'
+        201: '회원가입 성공',
+        400: '잘못된 요청',
+        500: '서버 오류'
     }
 )
 @api_view(['POST'])  # POST 요청만 허용
@@ -73,6 +73,7 @@ def signup_view(request):
         200: PetInfoSerializer,
         400: '잘못된 요청입니다.',
         401: '인증 실패입니다.'
+        500: '서버 오류'
     }
 )
 @api_view(['POST'])
@@ -106,6 +107,7 @@ def pet_info_view(request):
         )),
         400: '잘못된 요청입니다.',
         401: '인증 실패입니다.'
+        500: '서버 오류'
     }
 )
 @api_view(['POST'])
