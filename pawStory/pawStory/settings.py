@@ -10,6 +10,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # secrets.json 파일에서 시크릿 키 값 로드하기
 secret_file = BASE_DIR / 'secrets.json'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 with open(secret_file) as f:
     secrets = json.loads(f.read())
 
