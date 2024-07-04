@@ -2,10 +2,12 @@ from django.contrib.auth import login, authenticate, get_user_model
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny, IsAuthenticated  
-from rest_framework_simplejwt.tokens import RefreshToken  
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import SignUpSerializer, PetInfoSerializer, LoginSerializer
 from django.views.decorators.csrf import csrf_exempt
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 
 User = get_user_model()
@@ -21,6 +23,16 @@ def create_temp_access_token(user):
 
 # 회원가입을 처리하는 API 뷰
 @csrf_exempt  # CSRF 검증 비활성화
+@swagger_auto_schema(
+    method='post',
+    operation_summary="회원가입",
+    operation_description="새로운 사용자를 등록합니다.",
+    request_body=SignUpSerializer,
+    responses={
+        201: openapi.Response('Created', SignUpSerializer),
+        400: '잘못된 요청입니다.'
+    }
+)
 @api_view(['POST'])  # POST 요청만 허용
 @permission_classes([AllowAny])  # 회원가입은 누구나 가능
 def signup_view(request):
@@ -45,6 +57,24 @@ def signup_view(request):
 
 
 # 반려동물 정보 API 뷰
+@swagger_auto_schema(
+    method='post',
+    operation_summary="반려동물 정보 입력",
+    operation_description="로그인된 사용자의 반려동물 정보를 입력합니다.",
+    request_body=PetInfoSerializer,
+    manual_parameters=[openapi.Parameter(
+        'Authorization',
+        openapi.IN_HEADER,
+        description="Bearer [JWT token]",
+        type=openapi.TYPE_STRING,
+        required=True
+    )],
+    responses={
+        200: PetInfoSerializer,
+        400: '잘못된 요청입니다.',
+        401: '인증 실패입니다.'
+    }
+)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def pet_info_view(request):
@@ -61,6 +91,23 @@ def pet_info_view(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # 로그인 API 뷰
+@swagger_auto_schema(
+    method='post',
+    operation_summary="로그인",
+    operation_description="사용자가 로그인합니다.",
+    request_body=LoginSerializer,
+    responses={
+        200: openapi.Response('로그인 성공', openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'refresh_token': openapi.Schema(type=openapi.TYPE_STRING),
+                'access_token': openapi.Schema(type=openapi.TYPE_STRING),
+            }
+        )),
+        400: '잘못된 요청입니다.',
+        401: '인증 실패입니다.'
+    }
+)
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_view(request):
@@ -85,8 +132,6 @@ def login_view(request):
                     'refresh_token': refresh_token,
                     'access_token': access_token,
                 }, status=status.HTTP_200_OK)
-
-            
 
             print("Invalid credentials for user_id:", user_id)
             return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
