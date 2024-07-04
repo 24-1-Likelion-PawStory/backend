@@ -32,7 +32,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEBUG = True
 
 ALLOWED_HOSTS = ['3.39.150.64', 
-    'pawstory.p-e.kr/'
+    'pawstory.p-e.kr'
 ]
 
 INSTALLED_APPS = [
