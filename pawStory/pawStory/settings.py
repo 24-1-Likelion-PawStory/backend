@@ -3,13 +3,18 @@ import json
 from pathlib import Path
 from datetime import timedelta
 from django.core.exceptions import ImproperlyConfigured
-from . import mysettings # mysettings.py 파일을 import 합니다.
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # secrets.json 파일에서 시크릿 키 값 로드하기
 secret_file = BASE_DIR / 'secrets.json'
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),  # 프로젝트 루트의 static 디렉토리
+]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 with open(secret_file) as f:
     secrets = json.loads(f.read())
@@ -30,7 +35,10 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [ '3.39.150.64', 
+    'pawstory.p-e.kr',
+    '127.0.0.1',
+]
 
 INSTALLED_APPS = [
     #my apps
@@ -58,7 +66,8 @@ AUTH_USER_MODEL = 'users.Member' # 사용자 모델을 커스텀 유저 모델�
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -71,7 +80,35 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
- 
+CORS_ALLOW_METHODS = [  # 허용할 옵션
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+CORS_ALLOW_HEADERS = [  # 허용할 헤더
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080",
+    "http://127.0.0.1:8000",
+    "http://3.39.150.64",
+    "https://pawstory.p-e.kr",
+]
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
@@ -125,7 +162,6 @@ DATABASES = {
     }
 }
 
-# DATABASES = mysettings.DATABASES # mysettings.py에서 데이터베이스 설정을 가져옵니다.
 
 AUTH_PASSWORD_VALIDATORS = [
     {
