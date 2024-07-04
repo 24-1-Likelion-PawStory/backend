@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
+    'drf_yasg',
 
 ]
 
@@ -85,7 +86,7 @@ SIMPLE_JWT = {
     'SIGNING_KEY': SIGNING_KEY,
 		# JWT에서 가장 중요한 인증키입니다! 
 		# 이 키가 알려지게 되면 JWT의 인증체계가 다 털릴 수 있으니 노출되지 않게 조심해야합니다!
-    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=3),
 		# access token의 유효시간을 설정합니다.
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 		# refresh token의 유효시간을 설정합니다.
