@@ -26,7 +26,6 @@ class CustomUserManager(BaseUserManager):
             user_id=user_id,
             name=name,
             user_bir=user_bir,
-            phone=extra_fields.get('phone', ''),  #전화번호 필드 추가
             pet_name='Default Pet Name', # 기본값 설정을 통해 회원가입만
             pet_type='DOG', # 기본값 설정 회원가입만처리
             **extra_fields
@@ -58,7 +57,6 @@ class Member(AbstractBaseUser, PermissionsMixin): # 사용자 모델 정의
     email = models.EmailField(unique=True) 
     user_id = models.CharField(max_length=20, unique=True)
     name = models.CharField(max_length=50)
-    phone = models.CharField(max_length=15, blank=True)  # 전화번호 필드 추가
     pet_name = models.CharField(max_length=50, null=True, blank=True)
     pet_type = models.CharField(
         max_length=4,
