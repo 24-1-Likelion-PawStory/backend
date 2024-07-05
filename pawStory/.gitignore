@@ -1,6 +1,5 @@
 vir
 db.sqlite3
-migrations
 .DS_Store
 __pycache__
 secrets.json
@@ -9,3 +8,8 @@ newenv
 db_backup.sqlite3
 media
 mysettings.py
+# Ignore all migration files
+**/migrations/*.py
+
+# But not the __init__.py file
+!**/migrations/__init__.py
