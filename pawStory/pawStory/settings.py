@@ -38,6 +38,7 @@ DEBUG = True
 ALLOWED_HOSTS = [ '3.37.90.199', 
     'pawstory.p-e.kr',
     '127.0.0.1',
+    'localhost',
 ]
 
 INSTALLED_APPS = [
