@@ -1,6 +1,5 @@
 vir
 db.sqlite3
-migrations
 .DS_Store
 __pycache__
 secrets.json
@@ -9,4 +8,7 @@ newenv
 db_backup.sqlite3
 media
 mysettings.py
+**/migrations/*.py
 prod.py
+!*/migrations/__init__.py
+

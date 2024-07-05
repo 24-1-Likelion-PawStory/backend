@@ -114,7 +114,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://3.39.150.64",
     "https://pawstory.p-e.kr",
     "http://localhost:3000",    
-    "http://pawstory-s3.s3-website.ap-northeast-2.amazonaws.com/"
+    "http://pawstory-s3.s3-website.ap-northeast-2.amazonaws.com"
 ]
 
 REST_FRAMEWORK = {
