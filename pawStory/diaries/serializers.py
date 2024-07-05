@@ -24,7 +24,7 @@ class DiaryLikeSerializer(serializers.ModelSerializer):
 class DiaryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Diary
-        fields = ['photo', 'content', 'is_public']
+        fields = ['id', 'photo', 'content', 'is_public']
 
     def create(self, validated_data):
         member = self.context['request'].user
