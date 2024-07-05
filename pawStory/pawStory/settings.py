@@ -3,9 +3,10 @@ import json
 from pathlib import Path
 from datetime import timedelta
 from django.core.exceptions import ImproperlyConfigured
+from . import mysettings # mysettings.py 파일을 import 합니다.
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # secrets.json 파일에서 시크릿 키 값 로드하기
 secret_file = BASE_DIR / 'secrets.json'
@@ -168,7 +169,7 @@ WSGI_APPLICATION = 'pawStory.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-#     # DATABASES = mysettings.DATABASES # mysettings.py에서 데이터베이스 설정을 가져옵니다.
+DATABASES = mysettings.DATABASES # mysettings.py에서 데이터베이스 설정을 가져옵니다.
 
 AUTH_PASSWORD_VALIDATORS = [
     {
