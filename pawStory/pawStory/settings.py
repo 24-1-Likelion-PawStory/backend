@@ -39,6 +39,7 @@ ALLOWED_HOSTS = [ '3.37.90.199',
     'pawstory.p-e.kr',
     '127.0.0.1',
     'localhost',
+    'pawstory-s3.s3-website.ap-northeast-2.amazonaws.com',
 ]
 
 INSTALLED_APPS = [
