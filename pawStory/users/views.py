@@ -43,7 +43,7 @@ def signup_view(request):
             user = serializer.save()  # 사용자 생성
             login(request, user)  # 사용자 로그인
             print("User created and logged in:", user)  # 로그 추가
-
+            
             # 임시 토큰 생성 펫 정보 입력 할 때 유효한 토큰 발급
             temp_access_token = create_temp_access_token(user)
             # 응답시에 유저 정보와 임시 토큰을 반환
