@@ -106,12 +106,12 @@ CORS_ALLOW_HEADERS = [  # 허용할 헤더
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
-    # "http://localhost:8080",
-    # "http://127.0.0.1:8000",
-    # "http://127.0.0.1:3000",
-    # "http://3.37.90.199",
-    # "https://pawstory.p-e.kr",
-    # "http://pawstory-s3.s3-website.ap-northeast-2.amazonaws.com",
+    "http://localhost:8080",
+    "http://127.0.0.1:8000",
+    "http://127.0.0.1:3000",
+    "http://3.37.90.199",
+    "https://pawstory.p-e.kr",
+    "http://pawstory-s3.s3-website.ap-northeast-2.amazonaws.com",
 ]
 
 REST_FRAMEWORK = {
