@@ -8,8 +8,9 @@ newenv
 db_backup.sqlite3
 media
 mysettings.py
-# Ignore all migration files
-**/migrations/*.py
+# Ignore all migrations files
+*/migrations/*.py[cod]
+*/migrations/*.py
 
-# But not the __init__.py file
-!**/migrations/__init__.py
+# But not the __init__.py files
+!*/migrations/__init__.py
