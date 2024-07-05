@@ -9,6 +9,5 @@ db_backup.sqlite3
 media
 mysettings.py
 **/migrations/*.py
-prod.py
 !*/migrations/__init__.py
 
