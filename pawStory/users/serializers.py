@@ -8,7 +8,7 @@ class SignUpSerializer(serializers.ModelSerializer): #이때는 반려동물정�
     
     class Meta:
         model = Member
-        fields = ('user_id', 'email', 'name', 'user_bir', 'password','phone')
+        fields = ('id','user_id', 'email', 'name', 'user_bir', 'password','phone')
     
     # 유효성 검사를 통과한 데이터를 사용하여 새로운 사용자 인스턴스를 생성
     def create(self, validated_data):
