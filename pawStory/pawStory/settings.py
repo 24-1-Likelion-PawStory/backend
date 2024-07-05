@@ -35,7 +35,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEBUG = True
 
-ALLOWED_HOSTS = [ '3.39.150.64', 
+ALLOWED_HOSTS = [ '3.37.90.199', 
     'pawstory.p-e.kr',
     '127.0.0.1',
 ]
@@ -106,7 +106,7 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://127.0.0.1:8000",
-    "http://3.39.150.64",
+    "http://3.37.90.199",
     "https://pawstory.p-e.kr",
 ]
 
