@@ -33,7 +33,7 @@ SIGNING_KEY = get_secret('SIGNING_KEY')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [ '3.37.90.199', 
     'pawstory.p-e.kr',
