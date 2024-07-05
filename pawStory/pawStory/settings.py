@@ -161,7 +161,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
+    # DATABASES = mysettings.DATABASES # mysettings.py에서 데이터베이스 설정을 가져옵니다.
 
 AUTH_PASSWORD_VALIDATORS = [
     {
