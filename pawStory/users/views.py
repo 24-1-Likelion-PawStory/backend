@@ -65,13 +65,6 @@ def signup_view(request):
     operation_summary="반려동물 정보 입력",
     operation_description="로그인된 사용자의 반려동물 정보를 입력합니다.",
     request_body=PetInfoSerializer,
-    manual_parameters=[openapi.Parameter(
-        'Authorization',
-        openapi.IN_HEADER,
-        description="Bearer [JWT token]",
-        type=openapi.TYPE_STRING,
-        required=True
-    )],
     responses={
         200: PetInfoSerializer,
         400: '잘못된 요청입니다.',
@@ -80,7 +73,6 @@ def signup_view(request):
     }
 )
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
 def pet_info_view(request):
     if request.method == 'POST':
         user = request.user
