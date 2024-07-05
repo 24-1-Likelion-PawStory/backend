@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import SignUpSerializer, PetInfoSerializer, LoginSerializer
+from .serializers import SignUpSerializer, PetInfoSerializer, LoginSerializer ,CheckUserIDSerializer
 from django.views.decorators.csrf import csrf_exempt
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -25,7 +25,7 @@ def create_temp_access_token(user):
 @swagger_auto_schema(
     method='post',
     operation_summary="회원가입",
-    operation_description="회원가입을 처리합니다. 이메일, 사용자 ID, 이름, 생일, 비밀번호를 입력받습니다.",
+    operation_description="회원가입을 처리합니다. 이메일, 사용자 ID, 이름, 생일, 비밀번호,전화번호를 입력받습니다.",
     request_body=SignUpSerializer,
     responses={
         201: '회원가입 성공',
@@ -43,12 +43,15 @@ def signup_view(request):
             user = serializer.save()  # 사용자 생성
             login(request, user)  # 사용자 로그인
             print("User created and logged in:", user)  # 로그 추가
-
+            
             # 임시 토큰 생성 펫 정보 입력 할 때 유효한 토큰 발급
             temp_access_token = create_temp_access_token(user)
             # 응답시에 유저 정보와 임시 토큰을 반환
+            response_data = serializer.data
+            response_data['phone'] = user.phone  # 전화번호 필드 추가
+            
             return Response({
-                'user': serializer.data,
+                'user': response_data,
                 'temp_access_token': temp_access_token
             }, status=status.HTTP_201_CREATED)  # 201 Created 상태코드 반환
 
@@ -118,7 +121,7 @@ def login_view(request):
         if serializer.is_valid():
             user_id = serializer.validated_data.get('user_id')
             password = serializer.validated_data.get('password')
-            user = authenticate(request, password=password, username=user_id)
+            user = authenticate(request, username=user_id, password=password)
 
             if user is not None: # 사용자 인증 성공
                 login(request, user) # 사용자 로그인
@@ -140,3 +143,32 @@ def login_view(request):
         
         print("Login validation errors:", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+
+@swagger_auto_schema(
+    method='post',
+    operation_summary="ID 중복 체크",
+    operation_description="사용자가 입력한 ID의 중복 여부를 확인합니다.",
+    request_body=CheckUserIDSerializer,
+    responses={
+        200: openapi.Response('사용 가능', openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'available': openapi.Schema(type=openapi.TYPE_BOOLEAN),
+            }
+        )),
+        400: '잘못된 요청입니다.'
+    }
+)
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def check_user_id(request):
+    serializer = CheckUserIDSerializer(data=request.data)
+    if serializer.is_valid():
+        user_id = serializer.validated_data['user_id']
+        if User.objects.filter(user_id=user_id).exists():
+            return Response({'available': False}, status=status.HTTP_200_OK)
+        else:
+            return Response({'available': True}, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
