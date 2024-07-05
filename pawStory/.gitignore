@@ -9,3 +9,4 @@ newenv
 db_backup.sqlite3
 media
 mysettings.py
+prod.py

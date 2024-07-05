@@ -5,7 +5,7 @@ from datetime import timedelta
 from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # secrets.json 파일에서 시크릿 키 값 로드하기
 secret_file = BASE_DIR / 'secrets.json'
@@ -33,7 +33,12 @@ SIGNING_KEY = get_secret('SIGNING_KEY')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-DEBUG = True
+
+#쿠키설정
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True 
+
+DEBUG = False
 
 ALLOWED_HOSTS = [ '3.39.150.64', 
     'pawstory.p-e.kr',
@@ -104,10 +109,12 @@ CORS_ALLOW_HEADERS = [  # 허용할 헤더
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080",
+    
     "http://127.0.0.1:8000",
     "http://3.39.150.64",
     "https://pawstory.p-e.kr",
+    "http://localhost:3000",    
+    "http://pawstory-s3.s3-website.ap-northeast-2.amazonaws.com/"
 ]
 
 REST_FRAMEWORK = {
@@ -155,13 +162,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'pawStory.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-    # DATABASES = mysettings.DATABASES # mysettings.py에서 데이터베이스 설정을 가져옵니다.
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+#     # DATABASES = mysettings.DATABASES # mysettings.py에서 데이터베이스 설정을 가져옵니다.
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -200,3 +207,4 @@ SWAGGER_SETTINGS = {
         }
     }
 }
+
